@@ -1,0 +1,129 @@
+<html>
+    <head>
+        <title>Bomer</title>
+        <script src='node_modules/phaser/dist/phaser-arcade-physics.min.js'></script>
+        <!-- <script src='js/phaser.min.js'></script> -->
+        <script>
+
+        var map = [
+            [0,0],
+            [50,50],
+            [100,100],
+            [200,200]
+        ]
+
+        var walltiles = []
+ 
+        var config = {
+                type: Phaser.AUTO,
+                width: 800,
+                height: 600,
+                backgroundColor: '#ccc',
+                physics: {
+                    default: 'arcade',
+                    arcade: {
+                        gravity: { y: 0 }
+                    }
+                },
+                scene: {
+                    preload: preload,
+                    create: create,
+                    update: update
+                }
+            };
+		
+                var game = new Phaser.Game(config);
+                var cat, catcher, cursors, txtScore, score;
+                console.log(game);
+                function preload() {
+                    //load in assets needed
+                    this.load.image('cat', 'img/cat.png');
+                    this.load.image('catcher', 'img/catcher.png');
+                    this.load.image('brick', 'img/brick.png');
+
+                    
+
+                }
+    
+                function create() {
+                    console.log(this);
+                    //setup game
+                    //this.physics.startSystem(Phaser.Physics.ARCADE);
+                    //this.game.stage.backgroundColor = '#124184';
+                    var arrayLength = map.length;
+                    for (var i = 0; i < arrayLength; i++) {
+                        console.log(map[i]);
+                        brick = this.add.sprite(map[i][0]+15, map[i][1]+15, 'brick');
+                        walltiles.push(brick);
+                    }
+                    console.log(walltiles);
+                    this.add.sprite(0,0,"brick");
+                    
+                    catcher = this.add.sprite(400, 300, "catcher");
+                    //game.physics.arcade.enable([catcher]);
+                    //catcher.anchor.setTo(.5,0);
+                    this.physics.world.enable(catcher, Phaser.Physics.ARCADE);
+    
+                    //cat = this.add.sprite( Math.random() * this.width, Math.random() * this.height, "cat");
+                    //this.physics.arcade.enable(cat, Phaser.Physics.ARCADE);
+    
+    
+                    score = 0;
+                    var style = { font: "20px Arial", fill: "#FFF" };
+                    txtScore = this.add.text(10, 10, score.toString(), style);
+    
+                    //controls
+                    cursors = this.input.keyboard.createCursorKeys();
+                }
+    
+                function update() {
+                    //run game loop code
+                    //console.log('dd');
+                    if(cursors.left.isDown) {
+                        catcher.x -= 5;
+                        //catcher.scale.x = 1;
+                    }
+    
+                    if(cursors.right.isDown) {
+                        catcher.x += 5;
+                        //catcher.scale.x = -1;
+                    }
+    
+                    if(cursors.up.isDown) {
+                        catcher.y -= 5;
+                    }
+    
+                    if(cursors.down.isDown) {
+                        catcher.y += 5;
+                    }
+
+                    var arrayLength = walltiles.length;
+                    for (var i = 0; i < arrayLength; i++) {
+                        //this.physics.overlap(catcher, walltiles[i], catHitHandler);
+                    }
+
+                    brick = this.add.sprite(300, 300, 'brick');
+                    this.physics.add.overlap(catcher, brick, catHitHandler, null, this);
+
+                    //this.physics.add.collider(catcher, brick);
+                    
+                    //this.physics.arcade.overlap(catcher, cat, catHitHandler);
+    
+                }
+    
+                function catHitHandler(catcherObject, catObject) {
+                    catObject.x =  Math.random() * this.width;
+                    catObject.y =  Math.random() * this.height;
+                    console.log('cdcdcdcdcd');
+                    score ++;
+                    txtScore.setText( score.toString()  );
+                }
+     
+            </script>
+    <head>
+
+    <body>
+
+    </body>
+
+</html>
